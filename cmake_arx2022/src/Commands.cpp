@@ -22,6 +22,7 @@ void Commands::Init()
 	acedRegCmds->addCommand(_T("TG"), _T("ReadLeader"), _T("ReadLeader"), ACRX_CMD_MODAL, readLeader);
 	acedRegCmds->addCommand(_T("TG"), _T("ArcTest"), _T("ArcTest"), ACRX_CMD_MODAL, arcTest);
 	acedRegCmds->addCommand(_T("TG"), _T("ReadArc"), _T("ReadArc"), ACRX_CMD_MODAL, readArc);
+	acedRegCmds->addCommand(_T("TG"), _T("ReadMText"), _T("ReadMText"), ACRX_CMD_MODAL, readMText);
 }
 
 void Commands::Unload()
@@ -357,6 +358,25 @@ void Commands::readArc()
 			{
 				AcDbArc* pArc = static_cast<AcDbArc*>(pEnt);
 				AcGeVector3d normal = pArc->normal();
+			}
+		}
+	}
+}
+
+void Commands::readMText()
+{
+	std::list<AcDbObjectId> selectedIds;
+	if (CDwgDatabaseUtil::GetSelObjects(TEXT(""), selectedIds))
+	{
+		AcDbEntity* pEnt = NULL;
+		Acad::ErrorStatus es = acdbOpenObject(pEnt, selectedIds.front(), AcDb::kForRead);
+		if (es == Acad::eOk)
+		{
+			if (pEnt->isA() == AcDbMText::desc())
+			{
+				AcDbMText* pMText = static_cast<AcDbMText*>(pEnt);
+				const ACHAR* contents = pMText->contents();
+				CString cont(contents);
 			}
 		}
 	}

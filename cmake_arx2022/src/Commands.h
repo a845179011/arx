@@ -22,5 +22,6 @@ public:
 
 	static void arcTest();
 	static void readArc();
+	static void readMText();
 };
 
